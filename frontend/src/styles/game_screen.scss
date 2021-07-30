@@ -1,0 +1,95 @@
+.game_screen {
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	nav {
+		height: 50px;
+		width: 100%;
+		margin: auto;
+		background-color: #efefefef;
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		color: rgb(44, 42, 42);
+		strong {
+			letter-spacing: 3px;
+		}
+	}
+	main {
+		height: calc(100vh - 50px);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		.start_button {
+			margin-bottom: 20px;
+		}
+		.result {
+			display: flex;
+			align-items: center;
+			margin-top: 5px;
+			img {
+				width: 100px;
+				height: 100px;
+				border-radius: 20px;
+			}
+			h4 {
+				margin-right: 10px;
+			}
+		}
+		.container {
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			width: 250px;
+			height: 250px;
+			border: 4px solid #456990;
+			div {
+				background: #456990;
+				width: calc(250px / 3);
+				height: calc(250px / 3);
+				font-size: 2rem;
+				box-sizing: border-box;
+				border: 1px solid whitesmoke;
+				background-size: 250px 250px;
+			}
+			.blue {
+				background-color: blue;
+				background-position: top left;
+			}
+			.green {
+				background-color: green;
+				background-position: top center;
+			}
+			.pink {
+				background-color: pink;
+				background-position: top right;
+			}
+			.yellow {
+				background-color: yellow;
+				background-position: center left;
+			}
+			.black {
+				background-color: black;
+				background-position: center center;
+			}
+			.purple {
+				background-color: purple;
+				background-position: center right;
+			}
+			.skyblue {
+				background-color: skyblue;
+				background-position: bottom left;
+			}
+			.grey {
+				background-color: grey;
+				background-position: bottom center;
+			}
+			.empty {
+				background: #49445a;
+				background-position: bottom right;
+				filter: blur(109px);
+				backdrop-filter: blur(50px);
+			}
+		}
+	}
+}
