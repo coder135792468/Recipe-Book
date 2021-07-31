@@ -158,6 +158,7 @@ export const addReceipe = (data) => async (dispatch, getState) => {
 				userInfo: { token },
 			},
 		} = getState();
+		console.log(token);
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
@@ -166,6 +167,7 @@ export const addReceipe = (data) => async (dispatch, getState) => {
 		};
 		// await fetch(`/api/receipe/comment/${id}`, config);
 		await axios.post(`/api/receipe`, data, config);
+		dispatch(getRecipes());
 	} catch (error) {
 		dispatch({
 			type: RECEIPE_ERROR,

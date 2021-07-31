@@ -89,9 +89,22 @@ const createReceipe = asyncHandler(async (req, res) => {
 	try {
 		const receipe = new Receipe({
 			title: req.body.title || 'No Title',
-			description: req.body.description || 'No Description',
-			ingredients: req.body.ingredients || 'No Ingredients',
-			image: req.body.image || 'No Image',
+			about: req.body.about,
+			conclusion: req.body.conclusion,
+			description: req.body.description || [
+				{
+					step: 'turn on your game lol',
+				},
+			],
+			ingredients: req.body.ingredients || [
+				{
+					ingredient: 'no title',
+					qty: '',
+				},
+			],
+			image:
+				req.body.image ||
+				'https://thumbs.dreamstime.com/z/recipe-word-text-green-leaf-logo-icon-design-white-background-suitable-card-typography-143638205.jpg',
 			user: req.user._id,
 		});
 		const createdReceipe = await receipe.save();

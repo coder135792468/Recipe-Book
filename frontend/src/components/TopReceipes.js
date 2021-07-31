@@ -14,7 +14,7 @@ const TopReceipes = ({ receipes }) => {
 	return (
 		<>
 			<h1 className={classes.con}>Top Receipes for you</h1>
-			<Slide indicators={true} easing='ease'>
+			<Slide className='slide' indicators={true} easing='ease'>
 				{receipes?.map((receipe) => (
 					<div className='each-slide'>
 						<RecipeCard receipe={receipe} />

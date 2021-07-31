@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import '../styles/receipe_screen.scss';
 import { useToasts } from 'react-toast-notifications';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import SendIcon from '@material-ui/icons/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	getRecipes,
@@ -9,9 +11,9 @@ import {
 	unlikeReceipe,
 	commentReceipe,
 } from '../store/actions/receipeAction';
-import { makeStyles, Grid, Button } from '@material-ui/core';
+import { makeStyles, IconButton } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
-import { Comments } from '../layouts';
+import { Comments, ReceipeInfo, Steps, ReceipeHelpInfo } from '../layouts';
 import { getUserData } from '../store/actions/userAction';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,8 +24,9 @@ const useStyles = makeStyles((theme) => ({
 	feedbackcon: {
 		height: '350px',
 		backgroundColor: ' #3e829a',
-
+		backgroundColor: theme.palette.primary.main,
 		borderRadius: ' 30px 30px 0 0',
+		overflow: 'hidden',
 	},
 	feedbackheader: {
 		display: 'flex',
@@ -31,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: '4px 0',
 		height: '40px',
 		borderBottom: '1px solid whitesmoke',
+		overflow: 'hidden',
 	},
 	headerelement: {
 		padding: '5px 20px',
@@ -44,15 +48,13 @@ const useStyles = makeStyles((theme) => ({
 	feedbackaddcon: {
 		width: ' 90%',
 		margin: ' auto',
-		height: ' 35px',
 		maxWidth: ' 600px',
 		backgroundColor: ' #efefef',
-		borderRadius: ' 20px',
+		borderRadius: '40px',
 		display: ' flex',
 	},
 	comment: {
 		flex: ' 1',
-		height: ' 35px',
 		padding: ' 0 15px',
 		border: ' none',
 		borderRadius: ' 20px 0 0 20px',
@@ -68,8 +70,6 @@ const useStyles = makeStyles((theme) => ({
 		overflow: ' scroll',
 	},
 	send: {
-		width: '35px',
-		height: '35px',
 		borderRadius: '50%',
 		background: '#4488ff',
 		border: 'none',
@@ -109,7 +109,6 @@ const ReceipeScreen = ({ history, match }) => {
 			top: 0,
 			behavior: 'smooth',
 		});
-
 		// eslint-disable-next-line
 	}, []);
 
@@ -181,7 +180,7 @@ const ReceipeScreen = ({ history, match }) => {
 			</Helmet>
 			<h2>
 				<ArrowBackIcon
-					onClick={() => history.push('/')}
+					onClick={() => history.goBack()}
 					className='back_button'
 				/>
 				<p>{info?.title.toUpperCase()}</p>
@@ -193,33 +192,41 @@ const ReceipeScreen = ({ history, match }) => {
 					<h4>Time:</h4>
 					{info?.time ? info.time : 'No Time Given'}
 				</p>
-
-				<h4>Ingredients:</h4>
-				<p className='ingredients'>
-					{info?.ingredients ? info.ingredients : 'NO Ingredients Given'}
-				</p>
-				{info?.description && <h4>Steps:</h4>}
-				<p className='steps'>{info?.description}</p>
 			</div>
+
+			{info?.about && (
+				<ReceipeInfo
+					title={'About'}
+					content={info?.about}
+					bg={'rgba(0,0,250,0.3)'}
+				/>
+			)}
+			<ReceipeHelpInfo
+				des={false}
+				title={'Ingredients'}
+				content={info?.ingredients}
+			/>
+			<ReceipeHelpInfo des={true} title={'Steps'} desc={info?.description} />
+
+			{info?.conclusion && (
+				<ReceipeInfo title={'Conclusion'} content={info?.conclusion} />
+			)}
 
 			<div className={classes.feedbackcon}>
 				<div className={classes.feedbackheader}>
-					<strong className={classes.headerelement} onClick={handleLike}>
+					<IconButton className={classes.headerelement} onClick={handleLike}>
 						{likes > 10 ? '10+' : likes}
 
-						<span
-							style={{ margin: '0 10px', color: liked && 'tomato' }}
-							className='fa fa-heart'
-						></span>
-					</strong>
-					<Button className={classes.headerelement}>
+						<FavoriteIcon style={{ color: liked && 'tomato' }} />
+					</IconButton>
+					<IconButton className={classes.headerelement}>
 						{comments?.length > 10 ? '10+' : comments?.length}
 
 						<span
 							style={{ margin: '0 10px', color: commented && 'tomato' }}
 							className='fa fa-comment'
 						></span>
-					</Button>
+					</IconButton>
 				</div>
 				<div className={classes.feedbackaddcon}>
 					<input
@@ -229,9 +236,9 @@ const ReceipeScreen = ({ history, match }) => {
 						type='text'
 						placeholder='Enter a Feedback'
 					/>
-					<button className={classes.send} onClick={handleComment}>
-						<span className='fa fa-arrow-right'></span>
-					</button>
+					<IconButton className={classes.send} onClick={handleComment}>
+						<SendIcon />
+					</IconButton>
 				</div>
 				<div className={classes.feedback}>
 					{userInfo?._id ? (

@@ -1,12 +1,14 @@
 .receipe_screen {
 	height: 100vh;
 	z-index: 5;
-
+	position: relative;
 	img {
-		width: 100%;
-		margin: 10px 0;
+		width: 300px;
+		margin: 10px;
 		border-radius: 30px;
-		max-height: 400px;
+		object-fit: contain;
+		position: relative;
+		left: calc(50% - 150px);
 	}
 	h2 {
 		text-align: center;
@@ -42,19 +44,17 @@
 		p {
 			margin: 30px 30px;
 
-			&:nth-child(1) {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				background-color: rgb(255, 138, 28);
-				border-radius: 30px;
-				color: #fff;
-				max-width: 300px;
-				margin: 0 auto;
-				box-shadow: 0 10px 10px rgba(158, 152, 152, 0.203);
-				h4 {
-					margin: 15px;
-				}
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: rgb(255, 138, 28);
+			border-radius: 30px;
+			color: #fff;
+			max-width: 300px;
+			margin: 0 auto;
+			box-shadow: 0 5px 30px rgba(158, 152, 152, 0.203);
+			h4 {
+				margin: 15px;
 			}
 		}
 		.ingredients {
@@ -63,14 +63,7 @@
 			white-space: pre-wrap;
 			border-radius: 10px;
 			max-width: 80vw;
-			margin: 10px auto;
-		}
-	}
-	.see-also {
-		margin: 20px 0;
-		h3 {
-			padding: 0 25px;
-			letter-spacing: 3px;
+			margin: 20px auto;
 		}
 	}
 

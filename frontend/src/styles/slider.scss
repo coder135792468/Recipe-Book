@@ -7,4 +7,8 @@
 	background-color: #efefef;
 	margin: 5px auto;
 	border-radius: 10px;
+	overflow: hidden;
+}
+.indicators *::-webkit-scrollbar {
+	display: none;
 }

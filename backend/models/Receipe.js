@@ -4,14 +4,36 @@ const ReceipeSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 	},
-	description: {
+	about: {
 		type: String,
-		required: true,
 	},
-	ingredients: {
+	conclusion: {
 		type: String,
-		required: true,
 	},
+	description: [
+		{
+			step: {
+				type: String,
+			},
+			step_id: {
+				type: String,
+			},
+		},
+	],
+	ingredients: [
+		{
+			ingredient: {
+				type: String,
+			},
+			ingredient_id: {
+				type: String,
+				default: Date.now().toString(),
+			},
+			qty: {
+				type: String,
+			},
+		},
+	],
 	time: {
 		type: String,
 	},

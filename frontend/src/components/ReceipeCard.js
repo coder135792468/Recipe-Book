@@ -9,6 +9,8 @@ import {
 	makeStyles,
 	Button,
 } from '@material-ui/core';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications';
@@ -17,11 +19,10 @@ import { approveReceipe, deleteReceipe } from '../store/actions/receipeAction';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: 200,
-		margin: '10px',
+		margin: '20px 30px',
 		borderRadius: 20,
 		padding: 20,
-		border: '1px solid whitesmoke',
-		boxShadow: '0 0 20px 0px rgba(20,20,0,.03)',
+		boxShadow: '0 0 20px 0px rgba(20,20,0,.1)',
 	},
 	media: {
 		height: 0,
@@ -32,13 +33,15 @@ const useStyles = makeStyles((theme) => ({
 	heading: {
 		fontSize: '1.1rem',
 		fontWeight: '600',
-		margin: '0 20px',
+		margin: '10px 20px',
 	},
 	avatar: {
 		backgroundColor: red[500],
 	},
 	gridCard: {
-		margin: 'auto',
+		[theme.breakpoints.down('sm')]: {
+			margin: 'auto',
+		},
 	},
 	actions: {
 		display: 'flex',
@@ -110,16 +113,16 @@ const RecipeCard = ({ receipe, review = false }) => {
 						<Chip
 							clickable
 							color={liked ? 'secondary' : 'primary'}
-							label={likes.length > 10 ? '10+ Likes' : `${likes.length} Likes`}
+							label={likes.length > 10 ? '10+' : `${likes.length}`}
+							icon={<FavoriteIcon />}
 						/>
 						<Chip
 							clickable
 							color={commented ? 'secondary' : 'primary'}
 							label={
-								comments.length > 10
-									? '10+ comments'
-									: `${comments.length} comments`
+								comments.length > 10 ? '10+ comments' : `${comments.length}`
 							}
+							icon={<ChatBubbleOutlineIcon />}
 						/>
 					</CardActions>
 					<h6
