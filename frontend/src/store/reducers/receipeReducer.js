@@ -6,6 +6,7 @@ import {
 	SET_LOADING,
 	GET_RECENT_RECEIPES,
 	GET_POPULAR_RECEIPES,
+	DELETE_RECEIPE,
 } from '../constants/types';
 
 const initalState = {
@@ -39,6 +40,17 @@ export const receipeReducer = (state = initalState, { payload, type }) => {
 				...state,
 				filter: state.receipes.filter((receipe) =>
 					receipe.title.match(new RegExp(`${payload}`, 'gi'))
+				),
+			};
+		case DELETE_RECEIPE:
+			return {
+				...state,
+				receipes: state.receipes.filter((receipe) => receipe._id !== payload),
+				popularReceipes: state.popularReceipes.filter(
+					(receipe) => receipe._id !== payload
+				),
+				recentReceipes: state.recentReceipes.filter(
+					(receipe) => receipe._id !== payload
 				),
 			};
 		case CLEAR_SEARCH:

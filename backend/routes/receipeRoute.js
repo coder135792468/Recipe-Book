@@ -7,7 +7,6 @@ import {
 	updateReceipe,
 	deleteReceipe,
 	likeReceipe,
-	unLikeReceipe,
 	feedbackComment,
 	deleteFeedbackComment,
 	getRecentReceipes,
@@ -25,7 +24,6 @@ router
 	.delete(protect, admin, deleteReceipe);
 
 router.route('/like/:id').put(protect, likeReceipe);
-router.route('/unlike/:id').put(protect, unLikeReceipe);
 
 router.route('/comment/:id').put(protect, feedbackComment);
 router.route('/comment/:id/:commentID').delete(protect, deleteFeedbackComment);

@@ -15,7 +15,6 @@ import { searchText } from '../store/actions/receipeAction';
 import HomeIcon from '@material-ui/icons/Home';
 import FaceIcon from '@material-ui/icons/Face';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import '../styles/header.scss';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -48,6 +47,17 @@ const useStyles = makeStyles((theme) => ({
 		borderRadius: '50%',
 		boxSizing: 'border-box',
 		border: '2px solid green',
+	},
+	header: {
+		display: ' flex',
+		justifyContent: ' space-between',
+		alignItems: ' center',
+		backgroundColor: ' rgb(43, 61, 226)',
+		color: ' aliceblue',
+		padding: ' 5px 0',
+		'& *': {
+			margin: ' 0 2rem',
+		},
 	},
 }));
 

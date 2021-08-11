@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Loader } from '../layouts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ReceipeCard } from '../components';
-import { getRecipes } from '../store/actions/receipeAction';
-import { getUserData } from '../store/actions/userAction';
 import { Helmet } from 'react-helmet';
 import { constants } from '../helpers';
 import { Header } from '../layouts';
@@ -34,20 +32,15 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminScreen = ({ history }) => {
 	const classes = useStyles();
-	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user);
 	const receipe = useSelector((state) => state.receipe);
-	const { receipes, filter, loading } = receipe;
+	const { receipes: data, filter, loading } = receipe;
+	const [receipes, setReceipes] = useState(data);
+
 	const getData = (txt) => (txt?.length === 0 ? receipes : txt);
 	useEffect(() => {
-		if (!receipes?.length) {
-			dispatch(getRecipes());
-		}
-		if (user?.userInfo?._id) {
-			dispatch(getUserData());
-		}
+		setReceipes(data);
 		// eslint-disable-next-line
-	}, []);
+	}, [data]);
 	return (
 		<>
 			<Helmet>

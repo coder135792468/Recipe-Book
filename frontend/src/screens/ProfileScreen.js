@@ -18,13 +18,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 	header_con: {
 		height: ' 250px',
-		background: 'linear-gradient(#efefef,#dfdfdf)',
+		background: theme.palette.primary.main,
 		textAlign: 'center',
+		color: '#fff',
 		borderRadius: '0 0 40px 40px',
 	},
 	header: {
 		height: '40px',
-		backgroundColor: '#efefef',
+		backgroundColor: theme.palette.secondary.main,
 		zIndex: ' 5',
 
 		display: 'flex',
@@ -35,10 +36,12 @@ const useStyles = makeStyles((theme) => ({
 		top: 0,
 	},
 	image: {
-		width: '100px',
-		height: '100px',
+		width: '80px',
+		height: '80px',
 		marginTop: '50px',
 		borderRadius: '50%',
+		padding: 3,
+		border: '3px solid #4488ff',
 	},
 	empty: {
 		textAlign: 'center',
@@ -102,8 +105,6 @@ const ProfileScreen = ({ history }) => {
 							fontSize: '2rem',
 							margin: '30px auto',
 							padding: '30px',
-
-							border: '1px solid white',
 						}}
 						className='fa fa-user'
 					></span>

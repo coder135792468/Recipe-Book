@@ -6,7 +6,7 @@ import checkID from '../middlewares/validateID.js';
 //@acess Public
 const getAllReceipes = asyncHandler(async (req, res) => {
 	try {
-		const receipes = await Receipe.find({}).sort({ likes: -1 });
+		const receipes = await Receipe.find({});
 		res.json(receipes);
 	} catch (error) {
 		console.log(error.message);
@@ -19,7 +19,9 @@ const getAllReceipes = asyncHandler(async (req, res) => {
 //@acess Public
 const getTodaysReceipes = asyncHandler(async (req, res) => {
 	try {
-		const receipes = await Receipe.find({}).limit(6).sort({ date: 1 });
+		const receipes = await Receipe.find({ approved: true })
+			.limit(6)
+			.sort({ date: 1 });
 		res.json(receipes);
 	} catch (error) {
 		console.log(error.message);
@@ -33,7 +35,9 @@ const getTodaysReceipes = asyncHandler(async (req, res) => {
 //@acess Public
 const getRecentReceipes = asyncHandler(async (req, res) => {
 	try {
-		const receipes = await Receipe.find({}).limit(4).sort({ date: -1 });
+		const receipes = await Receipe.find({ approved: true })
+			.limit(4)
+			.sort({ date: -1 });
 
 		res.json(receipes);
 	} catch (error) {
@@ -153,45 +157,15 @@ const likeReceipe = asyncHandler(async (req, res) => {
 					({ user }) => user.toString() === req.user._id.toString()
 				)
 			) {
-				return res.status(400).json({ message: 'Post already liked' });
+				receipe.likes = receipe.likes.filter(
+					({ user }) => user.toString() !== req.user._id.toString()
+				);
+			} else {
+				receipe.likes.unshift({ user: req.user._id });
 			}
-
-			receipe.likes.unshift({ user: req.user._id });
 
 			await receipe.save();
 
-			return res.json(receipe.likes);
-		} else {
-			return res.status(404).json({ message: 'Receipe not found' });
-		}
-	} catch (error) {
-		console.log(error.message);
-		res.status(500);
-		throw new Error('Server Error');
-	}
-});
-
-//@desc UnLike a Receipe
-//@route PUT /api/unlike/:id
-//@acess Private
-const unLikeReceipe = asyncHandler(async (req, res) => {
-	try {
-		const receipe = await Receipe.findById(req.params.id);
-
-		if (receipe) {
-			if (
-				!receipe.likes.some(
-					({ user }) => user.toString() === req.user._id.toString()
-				)
-			) {
-				return res.status(400).json({
-					message: 'Receipe is not liked',
-				});
-			}
-			receipe.likes = receipe.likes.filter(
-				({ user }) => user.toString() !== req.user._id.toString()
-			);
-			await receipe.save();
 			return res.json(receipe.likes);
 		} else {
 			return res.status(404).json({ message: 'Receipe not found' });
@@ -283,7 +257,6 @@ export {
 	updateReceipe,
 	deleteReceipe,
 	likeReceipe,
-	unLikeReceipe,
 	feedbackComment,
 	deleteFeedbackComment,
 };

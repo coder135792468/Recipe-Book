@@ -7,7 +7,10 @@ import {
 	SET_LOADING,
 	GET_RECENT_RECEIPES,
 	GET_POPULAR_RECEIPES,
+	DELETE_RECEIPE,
 } from '../constants/types';
+
+import { bubbleSort } from '../../helpers/utils';
 
 export const getRecipes = () => async (dispatch) => {
 	dispatch(setLoading(true));
@@ -15,6 +18,7 @@ export const getRecipes = () => async (dispatch) => {
 		dispatch(getRecentRecipes());
 		dispatch(getPopularRecipes());
 		const { data } = await axios.get('/api/receipe/');
+
 		dispatch({ type: GET_RECEIPES, payload: data });
 	} catch (error) {
 		dispatch({
@@ -30,11 +34,14 @@ export const getRecipes = () => async (dispatch) => {
 };
 const getRecentRecipes = () => async (dispatch) => {
 	const { data } = await axios.get('/api/receipe/recent');
-	dispatch({ type: GET_RECENT_RECEIPES, payload: data });
+	dispatch({ type: GET_RECENT_RECEIPES, payload: bubbleSort([...data]) });
 };
 const getPopularRecipes = () => async (dispatch) => {
 	const { data } = await axios.get('/api/receipe/popular');
-	dispatch({ type: GET_POPULAR_RECEIPES, payload: data });
+	dispatch({
+		type: GET_POPULAR_RECEIPES,
+		payload: bubbleSort([...data]).reverse(),
+	});
 };
 
 export const likeReceipe = (id) => async (dispatch, getState) => {
@@ -53,34 +60,6 @@ export const likeReceipe = (id) => async (dispatch, getState) => {
 		};
 
 		await fetch(`/api/receipe/like/${id}`, config);
-		// await axios.put(`/api/receipe/like/${id}`, config);
-	} catch (error) {
-		dispatch({
-			type: RECEIPE_ERROR,
-			payload:
-				error.response && error.response.data.message
-					? error.response.data.message
-					: error.message,
-		});
-	}
-};
-
-export const unlikeReceipe = (id) => async (dispatch, getState) => {
-	//unlike reciepe
-	try {
-		const {
-			user: {
-				userInfo: { token },
-			},
-		} = getState();
-		const config = {
-			method: 'PUT',
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		};
-
-		await fetch(`/api/receipe/unlike/${id}`, config);
 		// await axios.put(`/api/receipe/like/${id}`, config);
 	} catch (error) {
 		dispatch({
@@ -158,7 +137,6 @@ export const addReceipe = (data) => async (dispatch, getState) => {
 				userInfo: { token },
 			},
 		} = getState();
-		console.log(token);
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
@@ -215,6 +193,8 @@ export const deleteReceipe = (id) => async (dispatch, getState) => {
 	//approve receipe
 	dispatch(setLoading(true));
 	try {
+		dispatch({ type: DELETE_RECEIPE, payload: id });
+
 		const {
 			user: {
 				userInfo: { token },

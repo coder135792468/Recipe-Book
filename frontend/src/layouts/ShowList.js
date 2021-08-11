@@ -4,7 +4,6 @@ import {
 	Dialog,
 	DialogContent,
 	DialogTitle,
-	TextField,
 	Button,
 	List,
 	ListItemText,
@@ -23,11 +22,6 @@ const useStyles = makeStyles({
 	},
 });
 
-const maptoList = {
-	ins: 'des',
-	ingredient_id: 'step_id',
-	ingredient: 'step',
-};
 const DialogBox = ({
 	open,
 	setOpen,

@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Loader } from '../layouts';
 import { Helmet } from 'react-helmet';
 import { Header } from '../layouts';
+import { constants } from '../helpers';
+
 import { makeStyles } from '@material-ui/core';
 const useStyles = makeStyles({
 	title: {
@@ -39,7 +41,7 @@ const HomeScreen = () => {
 
 			{loading && <Loader />}
 			<h3 className={classes.title}>
-				Our Receipes for you{' '}
+				{constants.recipe.todays_recipe}
 				<span
 					style={{ marginLeft: '10px' }}
 					className='fa fa-arrow-right'

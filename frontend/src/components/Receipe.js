@@ -23,8 +23,7 @@ const Recipe = () => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const receipe = useSelector((state) => state.receipe);
-	const { receipes, filter, loading, recentReceipes, popularReceipes } =
-		receipe;
+	const { filter, loading, recentReceipes, popularReceipes } = receipe;
 	useEffect(() => {
 		dispatch(getRecipes());
 		// eslint-disable-next-line
@@ -47,9 +46,11 @@ const Recipe = () => {
 							<h6 className={classes.empty}>{constants.recipe.no_recipe}</h6>
 						)}
 					</Grid>
-					<TopReceipes receipes={receipes} />
+					<TopReceipes receipes={popularReceipes} />
 
-					<h2 style={{ padding: '0 30px' }}>Recent receipes</h2>
+					<h3 style={{ padding: '0 30px' }}>
+						{constants.recipe.recent_receipes}
+					</h3>
 					<Grid className={classes.grid} container>
 						{!filter?.length && recentReceipes?.length !== 0 ? (
 							recentReceipes?.map((receipe) => (

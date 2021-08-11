@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import '../styles/receipe_screen.scss';
+
 import { useToasts } from 'react-toast-notifications';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -8,22 +8,88 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
 	getRecipes,
 	likeReceipe,
-	unlikeReceipe,
 	commentReceipe,
 } from '../store/actions/receipeAction';
+import { constants } from '../helpers';
 import { makeStyles, IconButton } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
-import { Comments, ReceipeInfo, Steps, ReceipeHelpInfo } from '../layouts';
+import { Comments, ReceipeInfo, ReceipeHelpInfo } from '../layouts';
 import { getUserData } from '../store/actions/userAction';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
 	},
-
+	img: {
+		width: ' 300px',
+		margin: ' 10px',
+		borderRadius: ' 30px',
+		objectFit: ' contain',
+		position: ' relative',
+		left: ' calc(50% - 150px)',
+	},
+	h2: {
+		textAlign: 'center',
+		color: 'rgb(77, 73, 73)',
+		fontSize: '1.2rem',
+		display: 'flex',
+		alignItems: 'center',
+		marginTop: '0',
+		position: 'sticky',
+		top: '0',
+		zIndex: '3',
+		backgroundColor: 'rgb(252, 252, 252)',
+		backdropFilter: 'blur(40px)',
+	},
+	back_button: {
+		backgroundColor: 'rgba(245, 245, 245, 0.644)',
+		padding: '15px',
+		borderRadius: '50%',
+		margin: '0 5px',
+	},
+	desc: {
+		padding: ' 10px 20px',
+		margin: ' 10px',
+		backgroundColor: ' rgba(255, 255, 255, 0.726)',
+	},
+	p1: {
+		textAlign: ' center',
+		width: ' 100%',
+		fontWeight: ' 300',
+		letterSpacing: ' 2px',
+	},
+	receipe_screen: {
+		height: '100vh',
+		zIndex: '5',
+		position: 'relative',
+	},
+	p2: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		backgroundColor: 'rgb(255, 138, 28)',
+		borderRadius: '30px',
+		color: '#fff',
+		maxWidth: '300px',
+		margin: '0 auto',
+		boxShadow: '0 5px 30px rgba(158, 152, 152, 0.203)',
+	},
+	h4: {
+		margin: '15px',
+	},
+	ingredients: {
+		backgroundColor: 'rgb(247, 228, 247)',
+		padding: '30px',
+		whiteSpace: 'pre-wrap',
+		borderRadius: '10px',
+		maxWidth: '80vw',
+		margin: '20px auto',
+	},
+	steps: {
+		whiteSpace: 'pre-wrap',
+	},
 	feedbackcon: {
 		height: '350px',
-		backgroundColor: ' #3e829a',
 		backgroundColor: theme.palette.primary.main,
 		borderRadius: ' 30px 30px 0 0',
 		overflow: 'hidden',
@@ -80,20 +146,17 @@ const ReceipeScreen = ({ history, match }) => {
 	const classes = useStyles();
 	const { addToast } = useToasts();
 	const dispatch = useDispatch();
-	const receipe = useSelector((state) => state.receipe);
-	const { receipes } = receipe;
+	const receipes = useSelector((state) => state.receipe.receipes);
 
-	const user = useSelector((state) => state.user);
-	const { userInfo } = user;
+	const userInfo = useSelector((state) => state.user.userInfo);
 	const con = useRef(null);
 	const [info, setInfo] = useState(
 		receipes.find((ele) => ele._id === match.params.id)
 	);
-	let isLiked = false;
-	let isCommented = false;
+
 	// eslint-disable-next-line
-	const [liked, setLiked] = useState(isLiked);
-	const [commented, setCommented] = useState(isCommented);
+	const [liked, setLiked] = useState(false);
+	const [commented, setCommented] = useState(false);
 	const [text, setText] = useState('');
 
 	const [likes, setLikes] = useState(info?.likes.length);
@@ -113,41 +176,39 @@ const ReceipeScreen = ({ history, match }) => {
 	}, []);
 
 	useEffect(() => {
+		setInfo(receipes.find((ele) => ele._id === match.params.id));
 		if (userInfo?._id) {
-			// eslint-disable-next-line
-			isLiked = info?.likes.some(
-				(like) => like.user.toString() === userInfo._id.toString()
+			setLiked(
+				info?.likes.some(
+					(like) => like.user.toString() === userInfo._id.toString()
+				)
 			);
-			// eslint-disable-next-line
-			isCommented = info?.comments.some(
-				(comment) => comment.user.toString() === userInfo._id.toString()
+			setCommented(
+				info?.comments.some(
+					(comment) => comment.user.toString() === userInfo._id.toString()
+				)
 			);
 		}
-		setLiked(isLiked);
-		setCommented(isCommented);
-		// eslint-disable-next-line
-	}, [info]);
+		setLikes(info?.likes.length);
+		setComments(info?.comments);
+
+		//eslint-disable-next-line
+	}, [receipes, info]);
 
 	const handleLike = () => {
 		if (userInfo?._id) {
 			if (liked) {
-				dispatch(unlikeReceipe(info?._id, userInfo.token));
 				setLiked(false);
 				setLikes(likes - 1);
-				dispatch(getRecipes());
-				setInfo(receipes.find((ele) => ele._id === match.params.id));
 			} else {
-				dispatch(likeReceipe(info?._id, userInfo.token));
 				setLiked(true);
 				setLikes(likes + 1);
-				dispatch(getRecipes());
-
-				setInfo(receipes.find((ele) => ele._id === match.params.id));
 			}
+			dispatch(likeReceipe(info?._id, userInfo.token));
 
 			// eslint-disable-next-line
 		} else {
-			addToast('Please Login to Like', { appearance: 'error' });
+			addToast(constants.auth.likeInfo, { appearance: 'error' });
 		}
 	};
 
@@ -165,32 +226,32 @@ const ReceipeScreen = ({ history, match }) => {
 				]);
 				setText('');
 			} else {
-				addToast('You have already Given Your feedback', {
+				addToast(constants.auth.feedbackGiven, {
 					appearance: 'info',
 				});
 			}
 		} else {
-			addToast('Please Login to comment', { appearance: 'info' });
+			addToast(constants.auth.commentInfo, { appearance: 'info' });
 		}
 	};
 	return (
-		<div ref={con} className='receipe_screen'>
+		<div ref={con} className={classes.receipe_screen}>
 			<Helmet>
 				<title>{info?.title}</title>
 			</Helmet>
 			<h2>
 				<ArrowBackIcon
 					onClick={() => history.goBack()}
-					className='back_button'
+					className={classes.back_button}
 				/>
-				<p>{info?.title.toUpperCase()}</p>
+				<p className={classes.p1}>{info?.title.toUpperCase()}</p>
 			</h2>
 
-			<img src={info?.image} alt={info?.title} />
-			<div className='desc'>
-				<p>
-					<h4>Time:</h4>
-					{info?.time ? info.time : 'No Time Given'}
+			<img className={classes.img} src={info?.image} alt={info?.title} />
+			<div className={classes.desc}>
+				<p className={classes.p2}>
+					<h4 className={classes.h4}>Time:</h4>
+					{info?.time ? info.time : constants.recipe.no_time}
 				</p>
 			</div>
 
@@ -248,9 +309,7 @@ const ReceipeScreen = ({ history, match }) => {
 							))}
 						</>
 					) : (
-						<p style={{ textAlign: 'center' }}>
-							Please Login to View and Add Comment
-						</p>
+						<p style={{ textAlign: 'center' }}>{constants.auth.viewComment}</p>
 					)}
 				</div>
 			</div>

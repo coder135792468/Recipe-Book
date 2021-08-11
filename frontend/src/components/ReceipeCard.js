@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { red } from '@material-ui/core/colors';
 import {
 	Chip,
@@ -50,28 +50,32 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const RecipeCard = ({ receipe, review = false }) => {
+const RecipeCard = ({ receipe: data, review = false }) => {
 	const { addToast } = useToasts();
 	const location = useLocation().pathname;
+	const [receipe, setReceipe] = useState(data);
+	const { title, _id, image, likes, comments } = receipe;
+
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const classes = useStyles();
-	const { title, _id, image, likes, comments } = receipe;
-	const user = useSelector((state) => state.user);
-	const { userInfo } = user;
-	let liked = false;
-	let commented = false;
-	if (userInfo?._id) {
-		liked = likes.some(
-			(like) => like.user.toString() === userInfo._id.toString()
-		);
-		commented = comments.some(
-			(comment) => comment.user.toString() === userInfo._id.toString()
-		);
-	}
+	const userInfo = useSelector((state) => state.user.userInfo);
 
+	const [liked, setLiked] = useState(
+		userInfo?._id
+			? likes?.some((like) => like.user.toString() === userInfo._id.toString())
+			: false
+	);
+	const [commented, setCommented] = useState(
+		userInfo?._id
+			? comments?.some(
+					(comment) => comment.user.toString() === userInfo._id.toString()
+			  )
+			: false
+	);
 	const [approved, setApproved] = useState(receipe.approved);
 	const [deleted, setDeleted] = useState(receipe ? false : true);
+
 	const approve = () => {
 		//approved recipes
 		dispatch(approveReceipe(_id, { approved: true }));
@@ -91,12 +95,27 @@ const RecipeCard = ({ receipe, review = false }) => {
 		if (!deleted) {
 			dispatch(deleteReceipe(_id));
 			setDeleted(true);
-			window.location.reload();
+			// window.location.reload();
 			addToast('Receipe Removed Successfully', { appearance: 'success' });
 		} else {
 			addToast('Receipe already deleted', { appearance: 'error' });
 		}
 	};
+
+	useEffect(() => {
+		setReceipe(data);
+		setLiked(
+			likes.some((like) => like.user.toString() === userInfo._id.toString())
+		);
+		setCommented(
+			comments.some(
+				(comment) => comment.user.toString() === userInfo._id.toString()
+			)
+		);
+		setApproved(receipe.approved);
+
+		//eslint-disable-next-line
+	}, [receipe]);
 
 	return (
 		(approved || review) && (

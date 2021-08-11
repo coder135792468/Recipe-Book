@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight } from '@material-ui/icons';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
 	makeStyles,
@@ -7,16 +6,32 @@ import {
 	TextField,
 	TextareaAutosize,
 } from '@material-ui/core';
-import '../styles/forms.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loader, ShowList } from '../layouts';
 import { addReceipe } from '../store/actions/receipeAction';
 import { Helmet } from 'react-helmet';
 import { useToasts } from 'react-toast-notifications';
-import { getUserData } from '../store/actions/userAction';
 import { DialogBox } from '../layouts';
 
 const useStyles = makeStyles((theme) => ({
+	form: {
+		maxWidth: '100vw',
+		width: '100%',
+		height: '100vh',
+		position: 'absolute',
+		inset: '0',
+		zIndex: '4',
+		overflow: 'scroll',
+		'& *': {
+			overflow: 'hidden',
+		},
+	},
+	forms_center: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'column',
+	},
 	input: {
 		width: '90%',
 		maxWidth: '500px',
@@ -49,13 +64,6 @@ const AddScreen = ({ history }) => {
 	const [description, setDescription] = useState([]);
 	const [ingredients, setIngrdients] = useState([]);
 
-	useEffect(() => {
-		if (!userInfo?._id) {
-			dispatch(getUserData());
-		}
-		// eslint-disable-next-line
-	}, []);
-
 	const openAddIngredients = () => {
 		setOpen(true);
 		setIsDes(false);
@@ -76,7 +84,6 @@ const AddScreen = ({ history }) => {
 			conclusion,
 		};
 		if (userInfo?._id) {
-			console.log(data);
 			dispatch(addReceipe(data));
 			addToast('Receipe Submitted for Approval', { appearance: 'success' });
 		} else {
@@ -93,7 +100,7 @@ const AddScreen = ({ history }) => {
 		setDescription(description.filter((ele) => ele.step_id !== id));
 	};
 	return !loading ? (
-		<div className='forms forms_center'>
+		<div className={`${classes.form} ${classes.forms_center}`}>
 			<Helmet>
 				<title>ADD RECEIPE </title>
 				<meta name='description' content='Admin Page for manage recipes' />
@@ -107,7 +114,7 @@ const AddScreen = ({ history }) => {
 				noValidate
 				autoComplete='off'
 				style={{ width: '100%' }}
-				className='forms_center'
+				className={classes.forms_center}
 				onSubmit={(e) => e.preventDefault()}
 			>
 				<TextField
@@ -225,10 +232,7 @@ const AddScreen = ({ history }) => {
 					className={classes.btn}
 					style={{ display: 'block', width: '50%', maxWidth: '300px' }}
 				>
-					<strong className='center space_around'>
-						Submit for approval
-						<ArrowRight style={{ fontSize: '30px' }} />
-					</strong>
+					<strong className='center space_around'>Submit for approval</strong>
 				</Button>
 			</form>
 		</div>

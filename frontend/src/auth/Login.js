@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Divider from '@material-ui/core/Divider';
@@ -8,7 +8,29 @@ import { login } from '../store/actions/userAction';
 import { constants } from '../helpers';
 import { Helmet } from 'react-helmet';
 
+const useStyles = makeStyles((theme) => ({
+	form: {
+		maxWidth: '100vw',
+		width: '100%',
+		height: '100vh',
+		position: 'absolute',
+		inset: '0',
+		zIndex: '4',
+		overflow: 'scroll',
+		'& *': {
+			overflow: 'hidden',
+		},
+	},
+	forms_center: {
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'column',
+	},
+}));
 const Login = ({ history }) => {
+	const classes = useStyles();
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -27,7 +49,7 @@ const Login = ({ history }) => {
 				<title>Login</title>
 			</Helmet>
 			{!loading ? (
-				<div className='forms forms_center'>
+				<div className={`${classes.form} ${classes.forms_center}`}>
 					<Button variant='contained' color='sucess'>
 						<Link to='/' style={{ textDecoration: 'none' }}>
 							Back to home
@@ -37,7 +59,7 @@ const Login = ({ history }) => {
 						noValidate
 						autoComplete='off'
 						style={{ width: '100%' }}
-						className='forms_center'
+						className={classes.forms_center}
 					>
 						<TextField
 							id='standard-basic'

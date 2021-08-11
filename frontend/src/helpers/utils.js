@@ -30,4 +30,17 @@ const gameOver = (arr, con) => {
 	}
 };
 
-export { shuffleArray, findEmptyCon, gameOver };
+const bubbleSort = (receipes) => {
+	for (let i = 0; i < receipes.length - 1; i++) {
+		for (let j = 0; j < receipes.length - i - 1; j++) {
+			if (receipes[j].likes.length > receipes[i].likes.length) {
+				let newData = receipes[i];
+				receipes[i] = receipes[j];
+				receipes[j] = newData;
+			}
+		}
+	}
+	return receipes;
+};
+
+export { shuffleArray, findEmptyCon, gameOver, bubbleSort };
