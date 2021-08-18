@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler';
 import Receipe from '../models/Receipe.js';
-import checkID from '../middlewares/validateID.js';
 //@desc GET all receipes
 //@route GET /api/receipes
 //@acess Public
